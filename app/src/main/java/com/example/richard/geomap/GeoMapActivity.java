@@ -15,7 +15,7 @@ public class GeoMapActivity extends AppCompatActivity  implements OnMapReadyCall
         setContentView(R.layout.activity_geo_map);
 
         SupportMapFragment mapFragment =
-                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.open_projects_map);
         mapFragment.getMapAsync(this);
     }
 
