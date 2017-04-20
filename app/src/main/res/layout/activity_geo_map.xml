@@ -8,6 +8,7 @@
 
     <Button
         android:id="@+id/new_project_button"
+        android:onClick=""
         android:layout_width="262dp"
         android:layout_height="53dp"
         android:text="New Project"
@@ -23,6 +24,7 @@
 
     <Button
         android:id="@+id/open_project_button"
+        android:onClick=""
         android:layout_width="261dp"
         android:layout_height="48dp"
         android:text="Open Project"
@@ -33,4 +35,5 @@
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintHorizontal_bias="0.504" />
+
 </android.support.constraint.ConstraintLayout>
