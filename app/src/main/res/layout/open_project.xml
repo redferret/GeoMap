@@ -11,13 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="245dp"
         class="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_weight="0.56" />
+        android:layout_weight="0.63" />
 
     <Spinner
         android:id="@+id/select_project_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.12"
+        android:layout_weight="0.22"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="150dp" />
 
@@ -36,4 +36,10 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.03"
         android:text="Delete" />
+
+    <Button
+        android:id="@+id/cancel_open_project"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cancel" />
 </LinearLayout>
