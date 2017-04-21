@@ -25,7 +25,8 @@ public class GeoMapActivity extends FragmentActivity implements OnMapReadyCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_geo_map);
+        setContentView(R.layout.new_location);
+
 
         // setupSupportMapFragment(R.id.open_projects_map);
     }
