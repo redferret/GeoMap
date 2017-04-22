@@ -1,9 +1,11 @@
+package com.example.richard.geomap;
+
 import com.google.android.gms.maps.model.LatLng;
 
 /**
  *
  */
-public class Location {
+public class Measurement {
 
     // Images
     //
@@ -12,11 +14,11 @@ public class Location {
     private double strike, dip;
 
 
-    public Location(LatLng pos){
+    public Measurement(LatLng pos){
         this.position = pos;
     }
 
-    public Location(double lat, double lng){
+    public Measurement(double lat, double lng){
         this(new LatLng(lat, lng));
     }
 
