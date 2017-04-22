@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/MainFragment"
+    class="com.example.richard.geomap.MainFragment"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,7 +10,6 @@
 
     <Button
         android:id="@+id/new_project_button"
-        android:onClick=""
         android:layout_width="262dp"
         android:layout_height="53dp"
         android:text="New Project"
@@ -24,7 +25,6 @@
 
     <Button
         android:id="@+id/open_project_button"
-        android:onClick=""
         android:layout_width="261dp"
         android:layout_height="48dp"
         android:text="Open Project"
