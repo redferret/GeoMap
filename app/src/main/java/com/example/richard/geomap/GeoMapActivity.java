@@ -34,21 +34,13 @@ public class GeoMapActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.geo_map_activity);
 
-        // However, if we're being restored from a previous state,
-        // then we don't need to do anything and should return or else
-        // we could end up with overlapping fragments.
         if (savedInstanceState != null) {
             return;
         }
 
-        // Create an instance of Fragment1
         MainFragment mainFragment = new MainFragment();
-
-        // In case this activity was started with special instructions from an Intent,
-        // pass the Intent's extras to the fragment as arguments
         mainFragment.setArguments(getIntent().getExtras());
 
-        // Add the fragment to the 'fragment_container' FrameLayout
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragment_container, mainFragment)
