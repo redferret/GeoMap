@@ -24,7 +24,7 @@ public class ChangeFragment implements View.OnClickListener{
 
         fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.replace(R.id.MainFragment, toChangeFragment);
+        fragmentTransaction.replace(R.id.fragment_container, toChangeFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 

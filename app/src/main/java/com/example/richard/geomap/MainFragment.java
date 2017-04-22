@@ -19,19 +19,19 @@ public class MainFragment extends Fragment {
         return view;
     }
 
-@Override
-public void onActivityCreated(Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-    FragmentManager manager = getActivity().getSupportFragmentManager();
+        FragmentManager manager = getActivity().getSupportFragmentManager();
 
-    Button newProject = (Button) getView().findViewById(R.id.new_project_button);
-    newProject.setOnClickListener(new ChangeFragment(new NewProjectFragment(), manager));
+        Button newProject = (Button) getView().findViewById(R.id.new_project_button);
+        newProject.setOnClickListener(new ChangeFragment(new NewProjectFragment(), manager));
 
-    Button openProject = (Button) getView().findViewById(R.id.open_project_button);
-    openProject.setOnClickListener(new ChangeFragment(new OpenProjectFragment(), manager));
+        Button openProject = (Button) getView().findViewById(R.id.open_project_button);
+        openProject.setOnClickListener(new ChangeFragment(new OpenProjectFragment(), manager));
 
-}
+    }
 
 
 
