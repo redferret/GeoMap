@@ -9,10 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-/**
- * Created by Richard on 4/22/2017.
- */
-
 public class MainFragment extends Fragment {
 
     @Override
