@@ -1,12 +1,17 @@
 package com.example.richard.geomap;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
+import android.widget.Toast;
+
 import com.orm.SchemaGenerator;
 import com.orm.SugarContext;
 import com.orm.SugarDb;
 
-public class SelectProjectActivity extends GeoMapActivity {
+import java.util.Random;
 
+public class SelectProjectActivity extends GeoMapActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +36,11 @@ public class SelectProjectActivity extends GeoMapActivity {
         SchemaGenerator schemaGenerator = new SchemaGenerator(this);
         schemaGenerator.createDatabase(new SugarDb(this).getDB());
 
-        // For Testing Purposes
+        // For Testing Purposes each time the app is restarted the DB is cleared
         Project.deleteAll(Project.class);
         Measurement.deleteAll(Measurement.class);
 
     }
-
 
     @Override
     protected void onStop() {

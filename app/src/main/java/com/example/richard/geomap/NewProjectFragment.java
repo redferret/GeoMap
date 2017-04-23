@@ -1,27 +1,47 @@
 package com.example.richard.geomap;
 
 
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 
-public class NewProjectFragment extends Fragment {
+public class NewProjectFragment extends Fragment implements AdapterView.OnItemSelectedListener{
 
     private int mNum;
-
+    private String selectedColor = Measurement.DEFAULT_COLOR;
+    private String[] colors = {"#c62828", "#ef6c00", "#ffeb3b", "#2e7d32", "#1976d2"};
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //set the layout you want to display in First Fragment
         View view = inflater.inflate(R.layout.new_project, container, false);
+
+        String[] colors = getActivity().getResources().getStringArray(R.array.colors);
+        Spinner colorSpinner = (Spinner) view.findViewById(R.id.colors_spinner);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_spinner_item, colors);
+
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        colorSpinner.setAdapter(spinnerArrayAdapter);
+
+        colorSpinner.setOnItemSelectedListener(this);
+
         return view;
     }
 
@@ -42,20 +62,20 @@ public class NewProjectFragment extends Fragment {
                 Project project = new Project(projectName, projectDesc);
                 project.save();
 
-                Random r = new Random();
-
-                double k = r.nextInt(10);
-                double lng = (r.nextBoolean()? k*-1: k) + 39;
-                double l = r.nextInt(10);
-                double lat = (r.nextBoolean()? k*-1: k) + -107;
-                
-                Measurement measurement = new Measurement(lat, lng);
+                Measurement measurement = new Measurement(39, -107, selectedColor);
                 measurement.saveProject(project);
                 measurement.save();
 
-                // Will change later to start a new Activity with this newly created Project
-                ((SelectProjectActivity)getActivity()).forceKeyboardToHide(getView());
+                measurement = new Measurement(38.9999, -106.9907, selectedColor);
+                measurement.saveProject(project);
+                measurement.save();
+
+                measurement = new Measurement(38.9939, -106.9890, selectedColor);
+                measurement.saveProject(project);
+                measurement.save();
+
                 getFragmentManager().popBackStack();
+                ((GeoMapActivity)getActivity()).forceKeyboardToHide(getView());
             }
         });
 
@@ -84,5 +104,17 @@ public class NewProjectFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mNum = getArguments() != null ? getArguments().getInt("num") : 1;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+        selectedColor = colors[position];
+        Log.d("Color", "Color is " + selectedColor);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

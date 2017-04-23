@@ -1,5 +1,6 @@
 package com.example.richard.geomap;
 
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
@@ -9,23 +10,31 @@ import com.orm.dsl.Ignore;
  */
 public class Measurement extends SugarRecord {
 
-    private String title;
+    public static final String DEFAULT_COLOR = "#303F9F";
+    private String notes;
     private double lat, lng;
     private double strike, dip;
-
+    private String color;
     private Project project;
 
     public Measurement() {
-        lat = lng = strike = dip = 0;
-        title = "";
+        this(0, 0, 0, 0, DEFAULT_COLOR);
     }
     public Measurement(double lat, double lng){
-        this(lat, lng, 0, 0);
+        this(lat, lng, 0, 0, DEFAULT_COLOR);
     }
-    public Measurement(double lat, double lng, double strike, double dip){
+    public Measurement(double lat, double lng, String color){
+        this(lat, lng, 0, 0, color);
+    }
+    public Measurement(double lat, double lng, double strike, double dip, String color){
         this.lat = lat;
         this.lng = lng;
+        this.color = color;
         setStrikeDip(strike, dip);
+    }
+
+    public String getColor(){
+        return color;
     }
 
     public void saveProject(Project project){
@@ -49,11 +58,11 @@ public class Measurement extends SugarRecord {
         return dip;
     }
 
-    public String getTitle() {
-        return title;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }

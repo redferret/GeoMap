@@ -18,6 +18,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -71,23 +73,22 @@ public class OpenProjectFragment extends Fragment implements OnMapReadyCallback 
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 mMap.clear();
-
                 Project project = (Project) parent.getItemAtPosition(position);
-
                 List<Measurement> markers = project.getMeasurements();
 
                 for (Measurement measurement : markers){
-
                     LatLng markerPos = measurement.getPosition();
+                    BitmapDescriptor icon = GeoMapActivity.getMarkerColor(measurement.getColor());
                     mMap.addMarker(new MarkerOptions()
                             .position(markerPos)
-                            .title(project.getTitle()));
+                            .title(project.getTitle())
+                            .icon(icon));
                 }
 
                 LatLng center = project.getCenter();
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(center));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
             }
 
             @Override
