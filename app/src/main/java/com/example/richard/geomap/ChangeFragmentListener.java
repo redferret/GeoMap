@@ -7,12 +7,12 @@ import android.view.View;
 
 import com.google.android.gms.maps.SupportMapFragment;
 
-public class ChangeFragment implements View.OnClickListener{
+public class ChangeFragmentListener implements View.OnClickListener{
 
     private Fragment toChangeFragment;
     private FragmentManager fragmentManager;
 
-    public ChangeFragment(Fragment toChangeFragment, FragmentManager fragmentManager) {
+    public ChangeFragmentListener(Fragment toChangeFragment, FragmentManager fragmentManager) {
         this.toChangeFragment = toChangeFragment;
         this.fragmentManager = fragmentManager;
     }
@@ -23,18 +23,11 @@ public class ChangeFragment implements View.OnClickListener{
         FragmentTransaction fragmentTransaction;
 
         fragmentTransaction = fragmentManager.beginTransaction();
-
+        //fragmentTransaction.setCustomAnimations(R.anim.fragment_slide_right_enter,
+        //                                        R.anim.fragment_slide_right_exit);
         fragmentTransaction.replace(R.id.fragment_container, toChangeFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-
-        if (toChangeFragment instanceof OpenProjectFragment){
-            OpenProjectsMapCallBack callBack = new OpenProjectsMapCallBack();
-
-            SupportMapFragment mapFragment =
-                    (SupportMapFragment) fragmentManager.findFragmentById(R.id.open_projects_map);
-            mapFragment.getMapAsync(callBack);
-        }
 
     }
 }

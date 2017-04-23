@@ -13,6 +13,8 @@ import android.widget.Button;
 
 public class NewProjectFragment extends Fragment {
 
+    private int mNum;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -30,4 +32,19 @@ public class NewProjectFragment extends Fragment {
 
     }
 
+    static NewProjectFragment newInstance(int num) {
+        NewProjectFragment f = new NewProjectFragment();
+
+        // Supply num input as an argument.
+        Bundle args = new Bundle();
+        args.putInt("num", num);
+        f.setArguments(args);
+        return f;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mNum = getArguments() != null ? getArguments().getInt("num") : 1;
+    }
 }

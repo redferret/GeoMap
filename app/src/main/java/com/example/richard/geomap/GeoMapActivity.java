@@ -46,9 +46,7 @@ public class GeoMapActivity extends FragmentActivity {
                 .add(R.id.fragment_container, mainFragment)
                 .commit();
 
-
     }
-
 
 
     /**
