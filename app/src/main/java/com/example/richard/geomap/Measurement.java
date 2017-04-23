@@ -1,28 +1,38 @@
 package com.example.richard.geomap;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
 
 /**
  *
  */
-public class Measurement {
+public class Measurement extends SugarRecord {
 
-    // Images
-    //
     private String title;
-    private LatLng position;
+    private double lat, lng;
     private double strike, dip;
 
+    private Project project;
 
-    public Measurement(LatLng pos){
-        this.position = pos;
+    public Measurement() {
+        lat = lng = strike = dip = 0;
+        title = "";
     }
-
     public Measurement(double lat, double lng){
-        this(new LatLng(lat, lng));
+        this(lat, lng, 0, 0);
+    }
+    public Measurement(double lat, double lng, double strike, double dip){
+        this.lat = lat;
+        this.lng = lng;
+        setStrikeDip(strike, dip);
     }
 
-    public void setStrikeDip(double strike, double dip){
+    public void setProject(Project project){
+        this.project = project;
+    }
+
+    public final void setStrikeDip(double strike, double dip){
         this.strike = strike;
         this.dip = dip;
     }
@@ -32,7 +42,7 @@ public class Measurement {
     }
 
     public LatLng getPosition() {
-        return position;
+        return new LatLng(lat, lng);
     }
 
     public double getDip() {

@@ -23,6 +23,9 @@ import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.orm.SchemaGenerator;
+import com.orm.SugarContext;
+import com.orm.SugarDb;
 
 import java.util.ArrayList;
 
@@ -46,22 +49,21 @@ public class GeoMapActivity extends FragmentActivity {
                 .add(R.id.fragment_container, mainFragment)
                 .commit();
 
+        SugarContext.init(this);
+
+        // create tables if new models don't exist
+        SchemaGenerator schemaGenerator = new SchemaGenerator(this);
+        schemaGenerator.createDatabase(new SugarDb(this).getDB());
     }
 
 
-    /**
-     * Load projects into the spinner for the user to select from
-     * @param list The list of projects
-     * @param <T> The datatype
-     */
-    public <T> void loadProjectsIntoSpinner(ArrayList<T> list){
-        Spinner karant_sp = (Spinner) findViewById(R.id.select_project_spinner);
-        ArrayAdapter<T> karant_adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, list);
-        karant_sp.setAdapter(karant_adapter);
-        karant_sp.setSelection(0);
-        //karant_sp.setOnItemSelectedListener(new select_karant());
+    @Override
+    protected void onStop() {
+        SugarContext.terminate();
+        super.onStop();
     }
+
+
 
     public void showTimePickerDialog(View v) {
         DialogFragment newFragment = new TimePickerFragment();

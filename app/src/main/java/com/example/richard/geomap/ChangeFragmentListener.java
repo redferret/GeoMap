@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.google.android.gms.maps.SupportMapFragment;
 
-public class ChangeFragmentListener implements View.OnClickListener{
+public class ChangeFragmentListener implements View.OnClickListener {
 
     private Fragment toChangeFragment;
     private FragmentManager fragmentManager;
