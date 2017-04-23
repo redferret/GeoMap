@@ -63,7 +63,7 @@ public class Project extends SugarRecord {
             latAvg /= n;
             lngAvg /= n;
         }
-        
+
         return new LatLng(latAvg, lngAvg);
     }
 }

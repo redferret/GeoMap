@@ -88,7 +88,9 @@ public class OpenProjectFragment extends Fragment implements OnMapReadyCallback 
                 LatLng center = project.getCenter();
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(center));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+                if (center.latitude != 0 && center.longitude != 0) {
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+                }
             }
 
             @Override
