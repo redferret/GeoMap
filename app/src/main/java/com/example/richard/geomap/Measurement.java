@@ -28,7 +28,7 @@ public class Measurement extends SugarRecord {
         setStrikeDip(strike, dip);
     }
 
-    public void setProject(Project project){
+    public void saveProject(Project project){
         this.project = project;
     }
 

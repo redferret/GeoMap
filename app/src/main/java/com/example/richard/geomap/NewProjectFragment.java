@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
 
 public class NewProjectFragment extends Fragment {
 
@@ -38,6 +41,18 @@ public class NewProjectFragment extends Fragment {
 
                 Project project = new Project(projectName, projectDesc);
                 project.save();
+
+                Random r = new Random();
+
+                double k = r.nextInt(10);
+                double lng = (r.nextBoolean()? k*-1: k) + 39;
+                double l = r.nextInt(10);
+                double lat = (r.nextBoolean()? k*-1: k) + -107;
+                
+                Measurement measurement = new Measurement(lat, lng);
+                measurement.saveProject(project);
+                measurement.save();
+
                 // Will change later to start a new Activity with this newly created Project
                 ((SelectProjectActivity)getActivity()).forceKeyboardToHide(getView());
                 getFragmentManager().popBackStack();
@@ -45,7 +60,13 @@ public class NewProjectFragment extends Fragment {
         });
 
         Button cancelNewProject = (Button) getView().findViewById(R.id.cancel_new_project_button);
-        cancelNewProject.setOnClickListener(new CancelAndGoBackListener(getFragmentManager()));
+        cancelNewProject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().popBackStack();
+                ((SelectProjectActivity)getActivity()).forceKeyboardToHide(getView());
+            }
+        });
 
     }
 

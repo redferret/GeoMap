@@ -30,6 +30,11 @@ public class SelectProjectActivity extends GeoMapActivity {
         // create tables if new models don't exist
         SchemaGenerator schemaGenerator = new SchemaGenerator(this);
         schemaGenerator.createDatabase(new SugarDb(this).getDB());
+
+        // For Testing Purposes
+        Project.deleteAll(Project.class);
+        Measurement.deleteAll(Measurement.class);
+
     }
 
 

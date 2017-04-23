@@ -8,19 +8,26 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class OpenProjectFragment extends Fragment implements OnMapReadyCallback {
+
+    private GoogleMap mMap;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,7 +66,35 @@ public class OpenProjectFragment extends Fragment implements OnMapReadyCallback 
                 android.R.layout.simple_spinner_item, list);
         karant_sp.setAdapter(karant_adapter);
         karant_sp.setSelection(0);
-        //karant_sp.setOnItemSelectedListener(new ItemSelectedListener());
+        karant_sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                mMap.clear();
+
+                Project project = (Project) parent.getItemAtPosition(position);
+
+                List<Measurement> markers = project.getMeasurements();
+
+                for (Measurement measurement : markers){
+
+                    LatLng markerPos = measurement.getPosition();
+                    mMap.addMarker(new MarkerOptions()
+                            .position(markerPos)
+                            .title(project.getTitle()));
+                }
+
+                LatLng center = project.getCenter();
+
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(center));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
 
@@ -75,6 +110,7 @@ public class OpenProjectFragment extends Fragment implements OnMapReadyCallback 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
+        mMap = googleMap;
+        googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
     }
 }

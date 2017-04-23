@@ -1,5 +1,7 @@
 package com.example.richard.geomap;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.kml.KmlLayer;
 import com.orm.SugarRecord;
 
 import java.util.List;
@@ -12,6 +14,7 @@ public class Project extends SugarRecord {
     public Project(){
         title = "No Title";
         desc = "";
+
     }
 
     public Project(String title, String desc){
@@ -41,5 +44,24 @@ public class Project extends SugarRecord {
 
     public String toString(){
         return title;
+    }
+
+    public LatLng getCenter() {
+
+        List<Measurement> measurements = getMeasurements();
+        int n = measurements.size();
+
+        double latAvg = 0;
+        double lngAvg = 0;
+
+        for (Measurement measurement : measurements){
+            LatLng mLatLng = measurement.getPosition();
+            latAvg += mLatLng.latitude;
+            lngAvg += mLatLng.longitude;
+        }
+        double lat = latAvg / n;
+        double lng = lngAvg / n;
+
+        return new LatLng(lat, lng);
     }
 }
