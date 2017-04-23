@@ -62,18 +62,6 @@ public class NewProjectFragment extends Fragment implements AdapterView.OnItemSe
                 Project project = new Project(projectName, projectDesc);
                 project.save();
 
-                Measurement measurement = new Measurement(39, -107, selectedColor);
-                measurement.saveProject(project);
-                measurement.save();
-
-                measurement = new Measurement(38.9999, -106.9907, selectedColor);
-                measurement.saveProject(project);
-                measurement.save();
-
-                measurement = new Measurement(38.9939, -106.9890, selectedColor);
-                measurement.saveProject(project);
-                measurement.save();
-
                 getFragmentManager().popBackStack();
                 ((GeoMapActivity)getActivity()).forceKeyboardToHide(getView());
             }

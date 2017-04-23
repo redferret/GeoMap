@@ -48,20 +48,22 @@ public class Project extends SugarRecord {
 
     public LatLng getCenter() {
 
-        List<Measurement> measurements = getMeasurements();
-        int n = measurements.size();
-
         double latAvg = 0;
         double lngAvg = 0;
 
-        for (Measurement measurement : measurements){
-            LatLng mLatLng = measurement.getPosition();
-            latAvg += mLatLng.latitude;
-            lngAvg += mLatLng.longitude;
-        }
-        double lat = latAvg / n;
-        double lng = lngAvg / n;
+        List<Measurement> measurements = getMeasurements();
+        int n = measurements.size();
 
-        return new LatLng(lat, lng);
+        if (n != 0) {
+            for (Measurement measurement : measurements) {
+                LatLng mLatLng = measurement.getPosition();
+                latAvg += mLatLng.latitude;
+                lngAvg += mLatLng.longitude;
+            }
+            latAvg /= n;
+            lngAvg /= n;
+        }
+        
+        return new LatLng(latAvg, lngAvg);
     }
 }
