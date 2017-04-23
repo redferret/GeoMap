@@ -2,6 +2,8 @@ package com.example.richard.geomap;
 
 import com.orm.SugarRecord;
 
+import java.util.List;
+
 public class Project extends SugarRecord {
 
     private String title;
@@ -15,6 +17,10 @@ public class Project extends SugarRecord {
     public Project(String title, String desc){
         this.title = title;
         this.desc = desc;
+    }
+
+    public List<Measurement> getMeasurements(){
+        return Measurement.find(Measurement.class, "project = ?", new String[]{getId().toString()});
     }
 
     public String getTitle() {

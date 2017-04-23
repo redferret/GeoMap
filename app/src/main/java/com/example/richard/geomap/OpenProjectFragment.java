@@ -62,7 +62,7 @@ public class OpenProjectFragment extends Fragment implements OnMapReadyCallback 
         //karant_sp.setOnItemSelectedListener(new ItemSelectedListener());
     }
 
-    
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

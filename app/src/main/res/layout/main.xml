@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.richard.geomap.GeoMapActivity">
+    tools:context="com.example.richard.geomap.SelectProjectActivity">
 
     <Button
         android:id="@+id/new_project_button"

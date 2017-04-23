@@ -3,15 +3,11 @@ package com.example.richard.geomap;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 
 public class NewProjectFragment extends Fragment {
@@ -43,6 +39,7 @@ public class NewProjectFragment extends Fragment {
                 Project project = new Project(projectName, projectDesc);
                 project.save();
                 // Will change later to start a new Activity with this newly created Project
+                ((SelectProjectActivity)getActivity()).forceKeyboardToHide(getView());
                 getFragmentManager().popBackStack();
             }
         });
