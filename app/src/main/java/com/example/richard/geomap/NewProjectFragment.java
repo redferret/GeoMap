@@ -64,17 +64,15 @@ public class NewProjectFragment extends Fragment implements AdapterView.OnItemSe
                 String projectDesc = projectDescText.getText().toString();
 
                 Project project = new Project(projectName, projectDesc);
-                Long projectId = project.getId();
                 project.save();
-
-
-
+                Long projectId = project.getId();
+                
                 ((GeoMapActivity)getActivity()).forceKeyboardToHide(getView());
 
                 // NAVIGATE THE USER TO GeoMapActivity with the new project name
                 Intent intent = new Intent(getActivity(), GoogleMapActivity.class);
                 intent.putExtra("PROJECT_ID", projectId);
-
+                Log.d("New Project", "Id: " + projectId);
                 TaskStackBuilder.create(getActivity())
                         .addParentStack(GoogleMapActivity.class)
                         .addNextIntent(intent)

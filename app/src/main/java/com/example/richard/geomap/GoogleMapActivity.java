@@ -47,12 +47,12 @@ public class GoogleMapActivity extends GeoMapActivity {
         selectedProject = Project.findById(Project.class, projectId);
 
         if (selectedProject == null) {
-            finishActivity(0);
+            finish();
         }
 
         mainFragment = new ProjectFragment();
 
-        mainFragment.setProjectLocation(selectedProject);
+        mainFragment.setProjectLocation(selectedProject.getId());
         //Get the fragment for this activity
         getSupportFragmentManager()
                 .beginTransaction()

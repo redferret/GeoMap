@@ -22,7 +22,7 @@
         android:layout_weight="0.14" />
 
     <Button
-        android:id="@+id/new_location"
+        android:id="@+id/new_location_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="New Measurement" />

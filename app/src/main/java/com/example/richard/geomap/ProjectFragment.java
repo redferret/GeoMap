@@ -4,9 +4,11 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -31,7 +33,7 @@ public class ProjectFragment extends Fragment implements OnMapReadyCallback, Goo
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    private Project projectLocation;
+    private Long projectId;
     private boolean recenter;
     private LatLng currentLatLng;
     private SupportMapFragment mapFragment;
@@ -51,10 +53,6 @@ public class ProjectFragment extends Fragment implements OnMapReadyCallback, Goo
 
         buildGoogleApiClient();
 
-        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
-                .findFragmentById(R.id.project_map);
-        mapFragment.getMapAsync(this);
-
         return view;
 
     }
@@ -63,6 +61,10 @@ public class ProjectFragment extends Fragment implements OnMapReadyCallback, Goo
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+
+        Button newLocation = (Button) getView().findViewById(R.id.new_location_button);
+        newLocation.setOnClickListener(new ChangeFragmentListener(new NewLocationFragment(), manager));
 
     }
     private synchronized void buildGoogleApiClient() {
@@ -81,7 +83,8 @@ public class ProjectFragment extends Fragment implements OnMapReadyCallback, Goo
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
         mMap.setMyLocationEnabled(true);
 
-        if (projectLocation != null) {
+        if (projectId != null) {
+            Project projectLocation = Project.findById(Project.class, projectId);
             ((GoogleMapActivity) getActivity()).centerOnProject(projectLocation, mMap);
         }
     }
@@ -149,7 +152,7 @@ public class ProjectFragment extends Fragment implements OnMapReadyCallback, Goo
         LocationServices.FusedLocationApi.removeLocationUpdates(getClient(), this);
     }
 
-    public void setProjectLocation(Project projectLocation) {
-        this.projectLocation = projectLocation;
+    public void setProjectLocation(Long projectId) {
+        this.projectId = projectId;
     }
 }
