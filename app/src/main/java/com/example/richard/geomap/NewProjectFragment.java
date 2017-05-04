@@ -1,6 +1,7 @@
 package com.example.richard.geomap;
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -60,10 +61,15 @@ public class NewProjectFragment extends Fragment implements AdapterView.OnItemSe
                 String projectDesc = projectDescText.getText().toString();
 
                 Project project = new Project(projectName, projectDesc);
+                Long projectId = project.getId();
                 project.save();
 
-                getFragmentManager().popBackStack();
                 ((GeoMapActivity)getActivity()).forceKeyboardToHide(getView());
+
+                // NAVIGATE THE USER TO GeoMapActivity with the new project name
+                Intent intent = new Intent(getActivity(), GoogleMapActivity.class);
+                intent.putExtra("PROJECT_ID", projectId);
+                startActivity(intent);
             }
         });
 
