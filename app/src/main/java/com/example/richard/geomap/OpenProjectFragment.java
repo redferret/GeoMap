@@ -1,10 +1,12 @@
 package com.example.richard.geomap;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.TaskStackBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +31,10 @@ import java.util.List;
 
 public class OpenProjectFragment extends Fragment implements OnMapReadyCallback {
 
+    ArrayAdapter karant_adapter;
     private GoogleMap mMap;
-
+    private Long selectedProjectId;
+    private Spinner karant_sp;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -38,7 +42,8 @@ public class OpenProjectFragment extends Fragment implements OnMapReadyCallback 
         View view = inflater.inflate(R.layout.open_project, container, false);
 
         setupOnCallListener();
-        loadProjects(view);
+        setUpSpinner(view);
+        loadProjects();
 
         return view;
     }
@@ -48,49 +53,37 @@ public class OpenProjectFragment extends Fragment implements OnMapReadyCallback 
                 .findFragmentById(R.id.open_projects_map);
         mapFragment.getMapAsync(this);
     }
-    private void loadProjects(View view){
+    private void loadProjects(){
         Iterator<Project> projectsIterator = Project.findAll(Project.class);
         ArrayList<Project> projects = new ArrayList<>();
         while(projectsIterator.hasNext()){
             projects.add(projectsIterator.next());
         }
-        loadProjectsIntoSpinner(view, projects);
+        setKarant_adapter(projects);
+
     }
 
-    /**
-     * Load projects into the spinner for the user to select from
-     * @param list The list of projects
-     * @param <T> The datatype
-     */
-    public <T> void loadProjectsIntoSpinner(View view, ArrayList<T> list){
-        Spinner karant_sp = (Spinner) view.findViewById(R.id.select_project_spinner);
-        ArrayAdapter<T> karant_adapter = new ArrayAdapter<>(getActivity(),
+    private void setKarant_adapter(ArrayList list){
+        karant_adapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_spinner_item, list);
         karant_sp.setAdapter(karant_adapter);
         karant_sp.setSelection(0);
+    }
+    /**
+     * Load projects into the spinner for the user to select from
+     * @param <T> The datatype
+     */
+    public <T> void setUpSpinner(View view){
+        karant_sp = (Spinner) view.findViewById(R.id.select_project_spinner);
+
         karant_sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 mMap.clear();
                 Project project = (Project) parent.getItemAtPosition(position);
-                List<Measurement> markers = project.getMeasurements();
-
-                for (Measurement measurement : markers){
-                    LatLng markerPos = measurement.getPosition();
-                    BitmapDescriptor icon = GeoMapActivity.getMarkerColor(measurement.getColor());
-                    mMap.addMarker(new MarkerOptions()
-                            .position(markerPos)
-                            .title(project.getTitle())
-                            .icon(icon));
-                }
-
-                LatLng center = project.getCenter();
-
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(center));
-                if (center.latitude != 0 && center.longitude != 0) {
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
-                }
+                selectedProjectId = project.getId();
+                ((SelectProjectActivity)getActivity()).centerOnProject(project, mMap);
             }
 
             @Override
@@ -105,6 +98,34 @@ public class OpenProjectFragment extends Fragment implements OnMapReadyCallback 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        Button deleteProject = (Button) getView().findViewById(R.id.delete_project_button);
+        deleteProject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Project project = Project.findById(Project.class, selectedProjectId);
+                if (project != null) {
+                    project.delete();
+                    karant_adapter.clear();
+                    loadProjects();
+                }
+            }
+        });
+
+        Button openProject = (Button) getView().findViewById(R.id.select_project_button);
+        openProject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // NAVIGATE THE USER TO GeoMapActivity with the new project name
+                Intent intent = new Intent(getActivity(), GoogleMapActivity.class);
+                intent.putExtra("PROJECT_ID", selectedProjectId);
+
+                TaskStackBuilder.create(getActivity())
+                        .addParentStack(GoogleMapActivity.class)
+                        .addNextIntent(intent)
+                        .startActivities();
+            }
+        });
 
         Button cancelOpenProject = (Button) getView().findViewById(R.id.cancel_open_project);
         cancelOpenProject.setOnClickListener(new CancelAndGoBackListener(getFragmentManager()));

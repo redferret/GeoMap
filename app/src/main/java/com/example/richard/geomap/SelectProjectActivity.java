@@ -37,8 +37,8 @@ public class SelectProjectActivity extends GeoMapActivity {
         schemaGenerator.createDatabase(new SugarDb(this).getDB());
 
         // For Testing Purposes each time the app is restarted the DB is cleared
-        Project.deleteAll(Project.class);
-        Measurement.deleteAll(Measurement.class);
+        //Project.deleteAll(Project.class);
+        //Measurement.deleteAll(Measurement.class);
 
     }
 

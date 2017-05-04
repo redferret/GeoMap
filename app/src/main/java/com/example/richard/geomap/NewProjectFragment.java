@@ -1,12 +1,15 @@
 package com.example.richard.geomap;
 
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,12 +67,18 @@ public class NewProjectFragment extends Fragment implements AdapterView.OnItemSe
                 Long projectId = project.getId();
                 project.save();
 
+
+
                 ((GeoMapActivity)getActivity()).forceKeyboardToHide(getView());
 
                 // NAVIGATE THE USER TO GeoMapActivity with the new project name
                 Intent intent = new Intent(getActivity(), GoogleMapActivity.class);
                 intent.putExtra("PROJECT_ID", projectId);
-                startActivity(intent);
+
+                TaskStackBuilder.create(getActivity())
+                        .addParentStack(GoogleMapActivity.class)
+                        .addNextIntent(intent)
+                        .startActivities();
             }
         });
 

@@ -12,8 +12,14 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TimePicker;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
 
 public abstract class GeoMapActivity extends FragmentActivity {
 
@@ -50,6 +56,30 @@ public abstract class GeoMapActivity extends FragmentActivity {
 
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             // Do something with the time chosen by the user
+        }
+    }
+
+    public void centerOnProject(Project project, GoogleMap mMap){
+
+        mMap.clear();
+        List<Measurement> markers = project.getMeasurements();
+
+        for (Measurement measurement : markers){
+            LatLng markerPos = measurement.getPosition();
+            BitmapDescriptor icon = GeoMapActivity.getMarkerColor(measurement.getColor());
+            mMap.addMarker(new MarkerOptions()
+                    .position(markerPos)
+                    .title(project.getTitle())
+                    .icon(icon));
+        }
+
+        LatLng center = project.getCenter();
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(center));
+        if (center.latitude != 0 && center.longitude != 0) {
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+        }else{
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(0));
         }
     }
 }

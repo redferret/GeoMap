@@ -29,7 +29,7 @@ import com.orm.SugarContext;
 
 import java.util.List;
 
-public class GoogleMapActivity extends FragmentActivity {
+public class GoogleMapActivity extends GeoMapActivity {
 
     private Project selectedProject;
     private ProjectFragment mainFragment;
@@ -38,13 +38,6 @@ public class GoogleMapActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.geo_map_activity);
-
-        mainFragment = new ProjectFragment();
-        //Get the fragment for this activity
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_container, mainFragment)
-                .commit();
 
         SugarContext.init(this);
 
@@ -57,6 +50,14 @@ public class GoogleMapActivity extends FragmentActivity {
             finishActivity(0);
         }
 
+        mainFragment = new ProjectFragment();
+
+        mainFragment.setProjectLocation(selectedProject);
+        //Get the fragment for this activity
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_container, mainFragment)
+                .commit();
 
     }
 

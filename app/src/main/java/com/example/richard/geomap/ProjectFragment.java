@@ -31,6 +31,8 @@ public class ProjectFragment extends Fragment implements OnMapReadyCallback, Goo
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
+    private Project projectLocation;
+    private boolean recenter;
     private LatLng currentLatLng;
     private SupportMapFragment mapFragment;
     private GoogleMap mMap;
@@ -53,7 +55,6 @@ public class ProjectFragment extends Fragment implements OnMapReadyCallback, Goo
                 .findFragmentById(R.id.project_map);
         mapFragment.getMapAsync(this);
 
-
         return view;
 
     }
@@ -74,16 +75,15 @@ public class ProjectFragment extends Fragment implements OnMapReadyCallback, Goo
 
     }
 
-    public void setupSupportMapFragment(int fragmentId) {
-        mapFragment = (SupportMapFragment) getFragmentManager().findFragmentById(fragmentId);
-        mapFragment.getMapAsync(this);
-    }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
         mMap.setMyLocationEnabled(true);
+
+        if (projectLocation != null) {
+            ((GoogleMapActivity) getActivity()).centerOnProject(projectLocation, mMap);
+        }
     }
 
     @Override
@@ -143,14 +143,13 @@ public class ProjectFragment extends Fragment implements OnMapReadyCallback, Goo
 
         //Place current location marker
         currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-        //move map camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-
     }
 
     public void removeLocationUpdates() {
         LocationServices.FusedLocationApi.removeLocationUpdates(getClient(), this);
+    }
+
+    public void setProjectLocation(Project projectLocation) {
+        this.projectLocation = projectLocation;
     }
 }
