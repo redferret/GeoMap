@@ -66,7 +66,7 @@ public class NewProjectFragment extends Fragment implements AdapterView.OnItemSe
                 Project project = new Project(projectName, projectDesc);
                 project.save();
                 Long projectId = project.getId();
-                
+
                 ((GeoMapActivity)getActivity()).forceKeyboardToHide(getView());
 
                 // NAVIGATE THE USER TO GeoMapActivity with the new project name
