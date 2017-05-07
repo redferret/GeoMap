@@ -43,6 +43,12 @@ public class SelectProjectActivity extends GeoMapActivity {
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        SugarContext.init(this);
+    }
+
+    @Override
     protected void onStop() {
         SugarContext.terminate();
         super.onStop();

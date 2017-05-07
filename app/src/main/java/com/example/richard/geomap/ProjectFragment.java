@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -20,10 +21,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.orm.SugarContext;
 
 /**
  * Created by Richard on 5/3/2017.
@@ -51,6 +54,8 @@ public class ProjectFragment extends Fragment implements OnMapReadyCallback, Goo
         mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.project_map);
         mapFragment.getMapAsync(this);
 
+        usersCurrentLocation = new Measurement();
+
         buildGoogleApiClient();
 
         return view;
@@ -61,10 +66,53 @@ public class ProjectFragment extends Fragment implements OnMapReadyCallback, Goo
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        FragmentManager manager = getActivity().getSupportFragmentManager();
+        Button getLocation = (Button) getView().findViewById(R.id.get_location_button);
+        getLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText lat = (EditText) getView().findViewById(R.id.latitude_text);
+                EditText lng = (EditText) getView().findViewById(R.id.logitude_text);
 
-        Button newLocation = (Button) getView().findViewById(R.id.new_location_button);
-        newLocation.setOnClickListener(new ChangeFragmentListener(new NewLocationFragment(), manager));
+                lat.setText(currentLatLng.latitude+"");
+                lng.setText(currentLatLng.longitude+"");
+
+                usersCurrentLocation.setLat(currentLatLng.latitude);
+                usersCurrentLocation.setLng(currentLatLng.longitude);
+
+                Toast.makeText(getActivity(), "Location Found and Set", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        Button record = (Button) getView().findViewById(R.id.record_button);
+        record.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                SugarContext.init(getActivity());
+
+                EditText lat = (EditText) getView().findViewById(R.id.latitude_text);
+                EditText lng = (EditText) getView().findViewById(R.id.logitude_text);
+
+                usersCurrentLocation.setLat(Double.parseDouble(lat.getText().toString()));
+                usersCurrentLocation.setLng(Double.parseDouble(lng.getText().toString()));
+
+                Project project = Project.findById(Project.class, projectId);
+                usersCurrentLocation.saveProject(project);
+                usersCurrentLocation.setColor(project.getColor());
+
+                LatLng markerPos = usersCurrentLocation.getPosition();
+                BitmapDescriptor icon = GeoMapActivity.getMarkerColor(usersCurrentLocation.getColor());
+                mMap.addMarker(new MarkerOptions()
+                        .position(markerPos)
+                        .title(project.getTitle())
+                        .icon(icon));
+
+                usersCurrentLocation.save();
+                usersCurrentLocation = new Measurement();
+
+                Toast.makeText(getActivity(), "Record Saved", Toast.LENGTH_LONG).show();
+            }
+        });
 
     }
     private synchronized void buildGoogleApiClient() {

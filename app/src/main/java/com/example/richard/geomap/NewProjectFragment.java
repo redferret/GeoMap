@@ -63,7 +63,7 @@ public class NewProjectFragment extends Fragment implements AdapterView.OnItemSe
                 String projectName = projectNameText.getText().toString();
                 String projectDesc = projectDescText.getText().toString();
 
-                Project project = new Project(projectName, projectDesc);
+                Project project = new Project(projectName, projectDesc, selectedColor);
                 project.save();
                 Long projectId = project.getId();
 

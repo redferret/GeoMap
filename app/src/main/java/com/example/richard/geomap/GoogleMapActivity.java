@@ -7,8 +7,10 @@ import android.location.Location;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -59,6 +61,20 @@ public class GoogleMapActivity extends GeoMapActivity {
                 .add(R.id.fragment_container, mainFragment)
                 .commit();
 
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        // do something here and don't write super.onBackPressed()FragmentTransaction fragmentTransaction;
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("Life Cycle: ", "On Resume");
+        mainFragment.connect();
     }
 
     @Override

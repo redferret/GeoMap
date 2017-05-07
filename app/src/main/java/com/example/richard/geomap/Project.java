@@ -10,16 +10,25 @@ public class Project extends SugarRecord {
 
     private String title;
     private String desc;
+    private String color;
+    public static final String DEFAULT_COLOR = "#303F9F";
 
     public Project(){
-        title = "No Title";
-        desc = "";
-
+        this("No Title", "", DEFAULT_COLOR);
     }
 
     public Project(String title, String desc){
+        this(title, desc, DEFAULT_COLOR);
+    }
+
+    public Project(String title, String desc, String color){
         this.title = title;
         this.desc = desc;
+        this.color = color;
+    }
+
+    public String getColor(){
+        return color;
     }
 
     public List<Measurement> getMeasurements(){

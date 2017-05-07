@@ -37,6 +37,10 @@ public class Measurement extends SugarRecord {
         return color;
     }
 
+    public void setColor(String color){
+        this.color = color;
+    }
+
     public void saveProject(Project project){
         this.project = project;
     }
@@ -44,6 +48,22 @@ public class Measurement extends SugarRecord {
     public final void setStrikeDip(double strike, double dip){
         this.strike = strike;
         this.dip = dip;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
     }
 
     public double getStrike() {
