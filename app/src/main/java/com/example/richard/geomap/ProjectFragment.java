@@ -28,6 +28,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.orm.SugarContext;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by Richard on 5/3/2017.
  */
@@ -62,9 +64,36 @@ public class ProjectFragment extends Fragment implements OnMapReadyCallback, Goo
 
     }
 
+
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        Button getStrikeDip = (Button) getView().findViewById(R.id.get_strike_dip_button);
+        getStrikeDip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText strikeText = (EditText) getView().findViewById(R.id.strike_text);
+                EditText dipText = (EditText) getView().findViewById(R.id.dip_text);
+
+                DecimalFormat df = new DecimalFormat("##.##");
+
+                float azimut = ((GoogleMapActivity)getActivity()).getAzimut();
+                float rotation = -azimut * 360 / (2 * 3.14159f);
+                double strike = rotation;
+
+                double pitch = ((GoogleMapActivity)getActivity()).getPitch();
+                // angle in degree [-180 - 0 - 180] degree
+                pitch = Math.toDegrees(pitch);
+                double dip = pitch < 0 ? -pitch: pitch;
+
+                strikeText.setText(df.format(strike));
+                dipText.setText(df.format(dip));
+
+                Toast.makeText(getActivity(), "Strike and Dip Set", Toast.LENGTH_LONG).show();
+            }
+        });
 
         Button getLocation = (Button) getView().findViewById(R.id.get_location_button);
         getLocation.setOnClickListener(new View.OnClickListener() {
@@ -75,9 +104,6 @@ public class ProjectFragment extends Fragment implements OnMapReadyCallback, Goo
 
                 lat.setText(currentLatLng.latitude+"");
                 lng.setText(currentLatLng.longitude+"");
-
-                usersCurrentLocation.setLat(currentLatLng.latitude);
-                usersCurrentLocation.setLng(currentLatLng.longitude);
 
                 Toast.makeText(getActivity(), "Location Found and Set", Toast.LENGTH_LONG).show();
             }
@@ -92,7 +118,13 @@ public class ProjectFragment extends Fragment implements OnMapReadyCallback, Goo
 
                 EditText lat = (EditText) getView().findViewById(R.id.latitude_text);
                 EditText lng = (EditText) getView().findViewById(R.id.logitude_text);
+                EditText strikeText = (EditText) getView().findViewById(R.id.strike_text);
+                EditText dipText = (EditText) getView().findViewById(R.id.dip_text);
 
+                double strike = Double.parseDouble(strikeText.getText().toString());
+                double dip = Double.parseDouble(dipText.getText().toString());
+
+                usersCurrentLocation.setStrikeDip(strike, dip);
                 usersCurrentLocation.setLat(Double.parseDouble(lat.getText().toString()));
                 usersCurrentLocation.setLng(Double.parseDouble(lng.getText().toString()));
 
@@ -105,6 +137,8 @@ public class ProjectFragment extends Fragment implements OnMapReadyCallback, Goo
                 mMap.addMarker(new MarkerOptions()
                         .position(markerPos)
                         .title(project.getTitle())
+                        .snippet("Dip: " + usersCurrentLocation.getDip()
+                                + " Strike: " + usersCurrentLocation.getStrike())
                         .icon(icon));
 
                 usersCurrentLocation.save();
@@ -139,14 +173,12 @@ public class ProjectFragment extends Fragment implements OnMapReadyCallback, Goo
 
     @Override
     public void onConnected(Bundle dataBundle) {
-        // Get last known recent location.
+
         Location mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        // Note that this can be NULL if last location isn't already known.
+
         if (mCurrentLocation != null) {
-            // Print current location if not null
             currentLatLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
         }
-        // Begin polling for new location updates.
         startLocationUpdates();
     }
 
@@ -159,7 +191,6 @@ public class ProjectFragment extends Fragment implements OnMapReadyCallback, Goo
         }
     }
 
-    // Trigger new location updates at interval
     protected void startLocationUpdates() {
         // Create the location request
         mLocationRequest = LocationRequest.create()
@@ -192,7 +223,6 @@ public class ProjectFragment extends Fragment implements OnMapReadyCallback, Goo
     @Override
     public void onLocationChanged(Location location) {
 
-        //Place current location marker
         currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
     }
 

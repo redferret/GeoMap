@@ -105,6 +105,7 @@ public class OpenProjectFragment extends Fragment implements OnMapReadyCallback 
             public void onClick(View v) {
                 Project project = Project.findById(Project.class, selectedProjectId);
                 if (project != null) {
+                    mMap.clear();
                     project.delete();
                     karant_adapter.clear();
                     loadProjects();

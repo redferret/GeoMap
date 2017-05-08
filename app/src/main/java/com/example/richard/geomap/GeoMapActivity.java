@@ -70,6 +70,7 @@ public abstract class GeoMapActivity extends FragmentActivity {
             mMap.addMarker(new MarkerOptions()
                     .position(markerPos)
                     .title(project.getTitle())
+                    .snippet("Dip: " + measurement.getDip() + " Strike: " + measurement.getStrike())
                     .icon(icon));
         }
 

@@ -3,6 +3,10 @@ package com.example.richard.geomap;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
@@ -31,10 +35,19 @@ import com.orm.SugarContext;
 
 import java.util.List;
 
-public class GoogleMapActivity extends GeoMapActivity {
+/**
+ * Sensor code taken from http://www.codingforandroid.com/2011/01/using-orientation-sensors-simple.html
+ */
+public class GoogleMapActivity extends GeoMapActivity implements SensorEventListener {
 
     private Project selectedProject;
     private ProjectFragment mainFragment;
+    private SensorManager mSensorManager;
+    private Sensor accelerometer;
+    private Sensor magnetometer;
+    private float[] mGravity;
+    private float[] mGeomagnetic;
+    private float[] orientation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +74,18 @@ public class GoogleMapActivity extends GeoMapActivity {
                 .add(R.id.fragment_container, mainFragment)
                 .commit();
 
+        orientation = new float[3];
+        mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+    }
+
+    public float getAzimut(){
+        return orientation[0];
+    }
+
+    public float getPitch(){
+        return orientation[1];
     }
 
     @Override
@@ -75,6 +100,8 @@ public class GoogleMapActivity extends GeoMapActivity {
         super.onResume();
         Log.d("Life Cycle: ", "On Resume");
         mainFragment.connect();
+        mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
@@ -83,8 +110,6 @@ public class GoogleMapActivity extends GeoMapActivity {
         // Connect the client.
         mainFragment.connect();
     }
-
-
 
     @Override
     protected void onStop() {
@@ -95,6 +120,29 @@ public class GoogleMapActivity extends GeoMapActivity {
             mainFragment.disconnect();
         }
         super.onStop();
+    }
+
+    protected void onPause() {
+        super.onPause();
+        mSensorManager.unregisterListener(this);
+    }
+
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {  }
+
+
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+            mGravity = event.values;
+        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+            mGeomagnetic = event.values;
+        if (mGravity != null && mGeomagnetic != null) {
+            float R[] = new float[9];
+            float I[] = new float[9];
+            boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
+            if (success) {
+                SensorManager.getOrientation(R, orientation);
+            }
+        }
     }
 
 }
